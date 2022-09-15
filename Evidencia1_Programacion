@@ -1,0 +1,229 @@
+
+contador = {   "Clientes": 10,
+                "Salas": 20,
+                "Programacion": 30
+           }
+
+cliente = {   "CliCod": 0,
+              "CliNam": 'Por Definir'              
+           }
+
+
+sala =     {   "sala0": 'Sala Cero'       
+           }
+
+salaCapacidad =     {   "sala0": '0'       
+           }
+
+
+agenda =     {   "0": '0'       
+           }
+
+
+
+opcion = '0'
+while not(opcion=='9'):
+    #print(' 1. menu opcion 01')
+    print(' 2. Clientes                  02')
+    print(' 3. Salas                     03')
+    print(' 4. Programacion Salas        04')
+    print(' 5. Consulta Agenda por Sala  05')
+    print(' 6. Consulta Agenda por Fecha 06')
+    print(' 7. Reporte de reservaciones  07')
+    print(' 9. Salir')
+
+    opcion=input('  --- ¿Cuál opcion?: ')
+    
+    if (opcion=='1'):
+        print(' **** menu opcion 01 ****')
+
+        
+    elif (opcion=='2'):
+        print(' **** cliente 02 ****')
+        print(cliente)
+        
+        siguiente = contador.get('Clientes')
+
+        # update value
+        siguiente =  siguiente + 1
+        contador['Clientes'] = siguiente
+    
+
+        print('Nuevo Cliente',siguiente)
+        NombreCliente=input('¿Nombre cliente?: ')
+ 
+
+        #sala['SalCod'] = siguiente
+        #sala['SalNam'] = NombreCliente
+        cliente[siguiente] = NombreCliente
+
+        #print(siguiente)
+        print(cliente)
+
+        
+
+    elif (opcion=='3'):
+        print(' **** Salas 03 ****')
+        print(sala)
+        
+        siguiente = contador.get('Salas')
+
+        # update value
+        siguiente =  siguiente + 1
+        contador['Salas'] = siguiente
+    
+
+        print('Nueva Sala',siguiente)
+        NombreSala=input('¿Nombre Sala?: ')
+        CapacidadSala=input('¿Capacidad Sala?: ')
+
+        #sala['SalCod'] = siguiente
+        #sala['SalNam'] = NombreCliente
+        sala[siguiente] = NombreSala
+        salaCapacidad[siguiente] = CapacidadSala
+
+        #print(siguiente)
+        print(sala)
+        print(salaCapacidad)
+        
+
+    elif (opcion=='4'):
+        print(' **** 04 Programacion de eventos x SALA ****')
+        #print(contador)
+
+        #Validacion sala#########################################################################
+        while True:
+          try:
+            iSala = int(input("SALA ?: "))
+          except ValueError:
+            print("Debes escribir un número.")
+            continue
+
+          if (iSala < 0):
+            print("Debes escribir un número positivo.")
+            continue
+          else:
+            #break
+            if (iSala in sala):
+              validar = sala.get(iSala)
+              print(validar)
+              break
+            else:
+              print ("No Existe sala " , iSala)
+              continue
+        #Validacion sala#########################################################################
+
+        #Validacion CLIENTE#########################################################################
+        while True:
+          try:
+            iCliente = int(input("CLIENTE ?: "))
+          except ValueError:
+            print("Debes escribir un número.")
+            continue
+
+          if (iCliente < 0):
+            print("Debes escribir un número positivo.")
+            continue
+          else:
+            #break
+            if (iCliente in cliente):
+              validar = cliente.get(iCliente)
+              print(validar)
+              break
+            else:
+              print ("No Existe cliente " , iCliente)
+              continue
+        #Validacion CLIENTE#########################################################################
+
+
+        #Validacion TURNO#########################################################################
+        while True:
+            iTurno = input("TURNO [M]añana [T]arde  [N]oche ?: ")
+
+            iTurno = iTurno.upper()
+
+            if (iTurno != "M" and iTurno != "T" and iTurno != "N"):
+              print("Turno no valido debe ser [M] [T] [N]")
+              continue
+            else:
+              break
+        #Validacion TURNO#########################################################################
+
+        #Validacion FECHA#########################################################################
+        while True:
+            from datetime import datetime,date,timedelta
+
+            test_str = input("FECHA AGENDA DD-MM-YY ?: ")
+
+ 
+            # printing original string
+            #print("The original string is : " + str(test_str))
+ 
+            # initializing format
+            format = "%d-%m-%y"
+            EndDate = datetime.now()+timedelta(days=2)
+            #res = datetime.now()
+ 
+ 
+            # using try-except to check for truth value
+            try:
+               # res = bool(datetime.strptime(test_str, format))
+                res = datetime.strptime(test_str, format)
+                #break
+                if (res >= EndDate):
+                  break
+                else:
+                    print("Fecha debe ser con 2 dias de Anticipacion")
+                    continue
+            except ValueError:
+              #res = False
+              print("Fecha Invalida ",test_str )
+              continue
+
+        #Validacion FECHA#########################################################################
+
+        #Se genera consecutivo de agenda
+        AgendaFolio = test_str + str(iSala) + str(iCliente) +iTurno
+        print("Folio de agenda = ",AgendaFolio)
+
+        AgendaEventoNombre = input("Nombre Evento ?: ")
+        agenda[AgendaFolio] = AgendaEventoNombre
+
+        print(agenda)
+
+
+    elif (opcion=='5'):
+        print(' **** Consulta por Sala  05 ****')
+        iSala=input('¿Numero de Sala?: ')
+
+        for clave in agenda:
+            if (len(clave) >= 13):
+              if (clave[8:10] == str(iSala)):
+                print(clave,"      ",agenda[clave])
+
+        
+    elif (opcion=='6'):
+        print(' **** Consulta por Fecha  06 ****')
+        iFecha=input('¿Fecha filtro?: ')
+
+        for clave in agenda:
+            if (len(clave) >= 13):
+              if (clave[0:8] == str(iFecha)):
+                print(clave,"      ",agenda[clave])
+
+    elif (opcion=='7'):
+        print('*******************************************************')
+        print(' **** Reporte de reservaciones el dia DD/MM/YY 07 ****')
+        print('Sala     Cliente     Evento              Turno')
+        print('*******************************************************')
+        datos =[sala, cliente,AgendaFolio ,iTurno]
+        print(datos)
+        print(' ******************* Fin del reporte *******************')
+        
+
+
+                
+    elif (opcion=='9'):
+        print(' **** Saliendo del menu  ****')
+    else:
+        print('No existe la opcion')
